@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-abap-hcm"
+version = "0.1.0"
+description = "RAG ibrido per repository SAP ABAP/HCM con ChromaDB, Ollama e Qwen"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "chromadb>=0.5.0",
+    "requests>=2.31.0",
+]
+
+[project.scripts]
+rag-abap-hcm = "rag_abap_hcm.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["rag_abap_hcm*"]
