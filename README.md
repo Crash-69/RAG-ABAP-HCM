@@ -5,7 +5,7 @@ RAG ABAP HCM
 ## 1. Obiettivo del progetto
 
 Il progetto nasce con l'obiettivo di realizzare un sistema RAG (Retrieval-Augmented Generation) specializzato sul patrimonio di codice SAP ABAP/HCM.
-
+Tutti i progetti qui presenti sono nati per scopo di studio e di ricerca personale sull'Intelligenza Artificiale e non sono a scopo di lucro .
 L'architettura deve permettere di:
 
 1. interrogare una base documentale composta da codice ABAP e informazioni tecniche SAP;
