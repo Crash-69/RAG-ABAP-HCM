@@ -3,6 +3,7 @@
 ## 1. Obiettivo della soluzione
 
 Questa soluzione realizza un sistema locale di **Retrieval-Augmented Generation (RAG)** specializzato in **SAP ABAP/HCM**, con l'obiettivo di fornire a un LLM codice e contesto tecnico SAP pertinenti prima della generazione.
+Tutti i progetti qui presenti sono nati per scopo di studio e di ricerca personale sull'Intelligenza Artificiale e non sono a scopo di lucro .
 
 Il principio fondamentale è:
 
