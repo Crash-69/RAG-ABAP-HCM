@@ -1,0 +1,188 @@
+{
+  "version": "Qwen Diagnostic Harness V3.3",
+  "generated": "2026-09-25T14:15:38",
+  "source_context": "C:\\Progetto_AI\\context_v3_1_results.json",
+  "vector_db_read_only": true,
+  "retrieval_executed": false,
+  "verified_evidence_builder": "deterministic_v1",
+  "ollama_url": "http://127.0.0.1:11434",
+  "model": "oisee/qwen-coder-abap:v7",
+  "temperature": 0.0,
+  "tests": [
+    {
+      "test_id": "T12E",
+      "context_chunks": 5,
+      "verified_field_inventory": {
+        "PA0001": {
+          "fields": [
+            "AWART",
+            "BEGDA",
+            "BEGUZ",
+            "BTRTL",
+            "BUKRS",
+            "COD_OGG_EXT",
+            "DOCNR",
+            "ENDDA",
+            "ENDUZ",
+            "FAPRS",
+            "KOSTL",
+            "ORGEH",
+            "PERNR",
+            "PERSK",
+            "PLANS",
+            "SEQNR",
+            "SNAME",
+            "STDAZ",
+            "STELL",
+            "SUBTY",
+            "WERKS"
+          ],
+          "sources": [
+            {
+              "source_file": "zse_read_occupational_data.html",
+              "chunk": 1,
+              "fields": [
+                "BTRTL",
+                "BUKRS",
+                "ORGEH",
+                "PERNR",
+                "PERSK",
+                "PLANS",
+                "STELL",
+                "WERKS"
+              ]
+            },
+            {
+              "source_file": "ztm_autorizzazione_massiva3.txt",
+              "chunk": 2,
+              "fields": [
+                "AWART",
+                "BEGDA",
+                "BEGUZ",
+                "DOCNR",
+                "ENDDA",
+                "ENDUZ",
+                "FAPRS",
+                "PERNR",
+                "SEQNR",
+                "STDAZ",
+                "SUBTY"
+              ]
+            },
+            {
+              "source_file": "ztm_simulazione_di_spesa.txt",
+              "chunk": 3,
+              "fields": [
+                "COD_OGG_EXT",
+                "KOSTL",
+                "ORGEH",
+                "PERNR",
+                "SNAME"
+              ]
+            },
+            {
+              "source_file": "ztm_ripartizione_fondi_sc.txt",
+              "chunk": 4,
+              "fields": [
+                "BEGDA",
+                "ENDDA",
+                "KOSTL",
+                "PERNR",
+                "SNAME"
+              ]
+            },
+            {
+              "source_file": "ztm_ripartizione_fondi.txt",
+              "chunk": 5,
+              "fields": [
+                "BEGDA",
+                "COD_OGG_EXT",
+                "ENDDA",
+                "KOSTL",
+                "ORGEH",
+                "PERNR",
+                "PERSK",
+                "SNAME"
+              ]
+            }
+          ]
+        }
+      },
+      "field_quality_gate": {
+        "expected": [
+          "BTRTL",
+          "BUKRS",
+          "KOSTL",
+          "ORGEH",
+          "PERNR",
+          "PERSG",
+          "PERSK",
+          "PLANS",
+          "STELL",
+          "WERKS"
+        ],
+        "verified": [
+          "BTRTL",
+          "BUKRS",
+          "KOSTL",
+          "ORGEH",
+          "PERNR",
+          "PERSK",
+          "PLANS",
+          "STELL",
+          "WERKS"
+        ],
+        "missing": [
+          "PERSG"
+        ],
+        "unexpected": [
+          "AWART",
+          "BEGDA",
+          "BEGUZ",
+          "COD_OGG_EXT",
+          "DOCNR",
+          "ENDDA",
+          "ENDUZ",
+          "FAPRS",
+          "SEQNR",
+          "SNAME",
+          "STDAZ",
+          "SUBTY"
+        ],
+        "expected_count": 10,
+        "verified_count": 9,
+        "coverage": 0.9
+      },
+      "response": "CAMPO: AWART  \nSIGNIFICATO: significato non documentato nel contesto  \n\nCAMPO: BEGDA  \nSIGNIFICATO: Data di inizio validità del record.  \n\nCAMPO: BEGUZ  \nSIGNIFICATO: Data di fine validità del record.  \n\nCAMPO: BTRTL  \nSIGNIFICATO: Tipo di posizione lavorativa.  \n\nCAMPO: BUKRS  \nSIGNIFICATO: Codice della società.  \n\nCAMPO: COD_OGG_EXT  \nSIGNIFICATO: Codice oggetto esterno.  \n\nCAMPO: DOCNR  \nSIGNIFICATO: Numero del documento.  \n\nCAMPO: ENDDA  \nSIGNIFICATO: Data di fine validità del record.  \n\nCAMPO: ENDUZ  \nSIGNIFICATO: Unità di misura della data di fine validità.  \n\nCAMPO: FAPRS  \nSIGNIFICATO: Codice di approvazione fiscale.  \n\nCAMPO: KOSTL  \nSIGNIFICATO: Centro di costo.  \n\nCAMPO: ORGEH  \nSIGNIFICATO: Organizzazione aziendale.  \n\nCAMPO: PERNR  \nSIGNIFICATO: Numero del personale.  \n\nCAMPO: PERSK  \nSIGNIFICATO: Codice della posizione lavorativa.  \n\nCAMPO: PLANS  \nSIGNIFICATO: Piano di assunzione.  \n\nCAMPO: SEQNR  \nSIGNIFICATO: Sequenza del record.  \n\nCAMPO: SNAME  \nSIGNIFICATO: Nome dell'unità organizzativa.  \n\nCAMPO: STDAZ  \nSIGNIFICATO: Data standardizzata.  \n\nCAMPO: STELL  \nSIGNIFICATO: Livello di posizione lavorativa.  \n\nCAMPO: SUBTY  \nSIGNIFICATO: Tipo di subordinazione.  \n\nCAMPO: WERKS  \nSIGNIFICATO: Codice dell'ufficio.  \n\nCAMPI TOTALI: 20",
+      "latency_seconds": 441.50733629998285,
+      "ollama_metadata": {
+        "prompt_eval_count": 3474,
+        "prompt_eval_duration": 265099566000,
+        "eval_count": 399,
+        "eval_duration": 164811060000,
+        "total_duration": 441458763000,
+        "load_duration": 11394513500
+      },
+      "response_field_check": {
+        "field_presence": {
+          "BTRTL": true,
+          "BUKRS": true,
+          "KOSTL": true,
+          "ORGEH": true,
+          "PERNR": true,
+          "PERSG": false,
+          "PERSK": true,
+          "PLANS": true,
+          "STELL": true,
+          "WERKS": true
+        },
+        "missing": [
+          "PERSG"
+        ],
+        "missing_count": 1,
+        "all_expected_present": false
+      },
+      "unexpected_response_fields": []
+    }
+  ]
+}

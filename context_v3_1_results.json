@@ -1,0 +1,628 @@
+{
+  "version": "V5.9 Context Builder V3.1",
+  "generated_at": "2026-09-23T10:38:41",
+  "vector_db_read_only": true,
+  "selection_policy": {
+    "default_context_k": 3,
+    "t12_context_k": 5,
+    "preserve_v3_rank_1": true,
+    "marginal_coverage": true,
+    "relation_hit_preference": true,
+    "relation_diversity": true,
+    "sql_signature_diversity": true,
+    "structural_diversity": true,
+    "source_family_diversity": true,
+    "text_redundancy_penalty": true,
+    "strong_sql_redundancy_penalty": true,
+    "coverage_safety_net": true,
+    "role_classification": [
+      "PRIMARY",
+      "COMPLEMENTARY",
+      "REDUNDANT",
+      "FALLBACK"
+    ]
+  },
+  "cases": [
+    {
+      "id": "T09",
+      "query": "centro di costo del dipendente",
+      "intent": "functional_lookup",
+      "requested_terms": [
+        "KOSTL",
+        "PA0001",
+        "PERNR"
+      ],
+      "covered_terms": [
+        "KOSTL",
+        "PA0001",
+        "PERNR"
+      ],
+      "missing_terms": [],
+      "coverage": 1.0,
+      "relations": [
+        "SELECT_KOSTL_FROM_PA0001_WHERE_PERNR"
+      ],
+      "source_family_count": 2,
+      "v3_candidates": 15,
+      "semantic_candidates": 30,
+      "exact_candidates": 17922,
+      "merged_candidates": 12114,
+      "duplicates_removed": 5830,
+      "semantic_seconds": 1.3179,
+      "context_k": 2,
+      "selected": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "source_file": "ztm_simulazione_di_spesa.txt",
+          "chunk_index": 22,
+          "source_family": "ztm_simulazione_di_spesa",
+          "v3_score": 734.225,
+          "relationship_score": 320,
+          "relationship_type": "SELECT_KOSTL_FROM_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "KOSTL",
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "IF sy-subrc = 0 AND NOT wa_straord_fond-zzkostl IS INITIAL.\n\n              tb_output-kostl = wa_straord_fond-zzkostl.\n              CHECK tb_output-kostl IN so_kostl.\n\n              CLEAR tb_pernr.\n              READ TABLE tb_pernr WITH KEY pernr = pa2002-pernr.\n              IF sy-subrc EQ 0.\n                tb_output-sname = tb_pernr-sname.\n              ENDIF.\n* Inizio modifiche                       \"INS SC_07/04/2016\n            ELSE.\n              SELECT SINGLE kostl sname\n                INTO (tb_output-kostl, tb_output-sname)\n                FROM  pa0001\n                WHERE  pernr  = pa2002-pernr\n                AND    sprps  = space\n                AND    endda  GE pa2002-begda\n                AND    begda  LE pa2002-endda.\n              IF sy-subrc EQ 0.\n                CHECK tb_output-kostl IN so_kostl.\n              ENDIF.\n* Fine modifiche                         \"INS SC_07/04/2016\n            ENDIF.\n*** AG - Mod. adeguamento straordinario elettorale - Fine\n          ELSE.\n            SELECT SINGLE kostl sname\n              INTO (tb_output-kostl, tb_output-sname)\n              FROM  pa0001\n              WHERE  pernr  = pa2002-pernr\n              AND    sprps  = space\n              AND    endda  GE pa2002-begda\n              AND    begda  LE pa2002-endda.\n*          READ TABLE tb_pernr WITH KEY pernr = pa2002-pernr.\n            IF sy-subrc EQ 0.\n              CHECK tb_output-kostl IN so_kostl.\n            ENDIF.\n          ENDIF.\n\n        ELSE.\n          READ TABLE tb_pernr WITH KEY pernr = pa2002-pernr.\n          IF sy-subrc EQ 0.\n            tb_output-sname = tb_pernr-sname.\n          ENDIF.\n        ENDIF."
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "source_file": "IF_EX_HRPAD00INFTY~AFTER_INPUT.txt",
+          "chunk_index": 321,
+          "source_family": "if_ex_hrpad00infty~after_input",
+          "v3_score": 688.525,
+          "relationship_score": 320,
+          "relationship_type": "SELECT_KOSTL_FROM_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "KOSTL",
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "DATA: assob_hr TYPE assob_hr.\n\n          IF sy-ucomm NE 'PRIM'.\n            CASE ipsyst-ioper.\n              WHEN 'INS'.\n                SELECT * INTO CORRESPONDING FIELDS OF p2007\n                  FROM  pa2007\n                  WHERE  pernr  = p2007-pernr\n                  AND    endda  GE p2007-begda\n                  AND    begda  LE p2007-endda\n                  AND    ktart  = p2007-ktart.\n                  SELECT SINGLE * INTO assob_hr\n                    FROM  assob_hr\n                    WHERE  pernr  = p2007-pernr\n                    AND    infty  = '2007'\n                    AND    subty  = p2007-ktart\n                    AND    endda  = p2007-endda\n                    AND    begda  = p2007-begda\n                    AND    seqnr  = p2007-seqnr.\n                  IF sy-subrc EQ 0.\n                    IF assob_hr-kostl EQ nuovo_cdc.\n                      MESSAGE e000(zhr) WITH 'Record già presente per periodo e CdC'.\n                    ENDIF.\n                  ELSE.\n                    DATA: kostl LIKE p0001-kostl.\n                    SELECT SINGLE kostl INTO kostl\n                      FROM  pa0001\n                      WHERE  pernr  = p2007-pernr\n                      AND    sprps  = space\n                      AND    endda  GE p2007-begda\n                      AND    begda  LE p2007-endda.\n\n*** AG - Mod. straord. elettorale - Inizio\n\n*                      IF nuovo_cdc EQ kostl.\n*                        MESSAGE e000(zhr) WITH 'Record già presente per periodo e CdC'.\n*                      ENDIF.\n\n                    IF p2007-ktart <> '14' AND\n                       p2007-ktart <> '13' AND\n                       p2007-ktart <> '07' AND\n                       p2007-ktart <> '01'.          \"INS SC_11/01/2016"
+        }
+      ],
+      "selection_diagnostics": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "covered": [
+            "KOSTL",
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "KOSTL",
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_KOSTL_FROM_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "ztm_simulazione_di_spesa",
+          "relation_signature": "(('PA0001', ('KOSTL', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR', 'SPRPS'), True), ('PA0001', ('KOSTL', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR', 'SPRPS'), True))",
+          "sql_shape": "(('PA0001',), ('KOSTL', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR', 'SPRPS'), True)"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "KOSTL",
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "KOSTL",
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_KOSTL_FROM_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "if_ex_hrpad00infty~after_input",
+          "relation_signature": "(('PA0001', ('KOSTL',), ('PERNR', 'SPRPS'), True),)",
+          "sql_shape": "(('PA0001',), ('KOSTL',), ('PERNR', 'SPRPS'), True)"
+        }
+      ]
+    },
+    {
+      "id": "T10",
+      "query": "leggere PA0001 per PERNR",
+      "intent": "code_lookup",
+      "requested_terms": [
+        "PA0001",
+        "PERNR"
+      ],
+      "covered_terms": [
+        "PA0001",
+        "PERNR"
+      ],
+      "missing_terms": [],
+      "coverage": 1.0,
+      "relations": [
+        "SELECT_PA0001_WHERE_PERNR"
+      ],
+      "source_family_count": 2,
+      "v3_candidates": 15,
+      "semantic_candidates": 30,
+      "exact_candidates": 16076,
+      "merged_candidates": 10910,
+      "duplicates_removed": 5169,
+      "semantic_seconds": 0.077,
+      "context_k": 2,
+      "selected": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "source_file": "zse_read_cid.html",
+          "chunk_index": 0,
+          "source_family": "zse_read_cid",
+          "v3_score": 1050.115,
+          "relationship_score": 220,
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "ZSE_READ_CID\n\n\n\n\n\n\nProgram listing for: ZSE_READ_CID\n\n\n\n\n\n\n\nFUNCTION ZSE_READ_CID.\n\n*\"----------------------------------------------------------------------\n\n*\"*\"Interfaccia locale:\n\n*\"  IMPORTING\n\n*\"     VALUE(INBOUND) TYPE  CHAR30 OPTIONAL\n\n*\"  EXPORTING\n\n*\"     VALUE(OUTBOUND) TYPE  CHAR30\n\n*\"  TABLES\n\n*\"      TAB_FILTER STRUCTURE  ZSE_FILTER_STRUCT\n\n*\"      TAB_CID STRUCTURE  ZSE_EMPLOYEE_STRUCT\n\n*\"----------------------------------------------------------------------\n\n\n\n*----------------------------------------------------------------------*\n\n* Dichiarazione dei dati locali alla funzione                          *\n\n*----------------------------------------------------------------------*\n\n\n\n\n\n\n\n  DATA: dim TYPE i.\n\n  DATA: l_sname LIKE pa0001-sname.\n\n  DATA: wa_filter TYPE zse_filter_struct.\n\n\n\n\n\n*==> Inizializzazione\n\nREFRESH tab_cid_output.\n\n\n\n*----------------------------------------------------------------------*\n\n* Blocco di controllo                                                  *\n\n*----------------------------------------------------------------------*\n\n\n\n  DESCRIBE TABLE tab_cid LINES dim.\n\n\n\n  IF dim > 0.\n\n\n\n    LOOP AT tab_filter INTO wa_filter.\n\n\n\n      SELECT SINGLE pernr sname FROM pa0001 INTO\n\n       (wa_cid_output-pernr , l_sname)\n\n      WHERE pernr = wa_filter-value\n\n        AND begda <= sy-datum\n\n        AND endda >= sy-datum.\n\n\n\n      IF sy-subrc = 0.\n\n\n\n       SPLIT l_sname AT space\n\n                     INTO wa_cid_output-nachn\n\n                          wa_cid_output-vorna.\n\n       APPEND wa_cid_output TO tab_cid_output.\n\n\n\n      ENDIF.\n\n\n\n\n\n    ENDLOOP.\n\n\n\n\n\n  ELSE.\n\n\n\nLOOP AT tab_filter INTO wa_filter.\n\n\n\n       SELECT SINGLE pernr sname FROM pa0001 INTO\n\n       (wa_cid_output-pernr , l_sname)\n\n      WHERE pernr = wa_filter-value"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "source_file": "zpro_cont.txt",
+          "chunk_index": 21,
+          "source_family": "zpro_cont",
+          "v3_score": 943.08,
+          "relationship_score": 220,
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "ENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  CHECK-PERNR\n*&---------------------------------------------------------------------*\n*       text\n*----------------------------------------------------------------------*\n*  -->  p1        text\n*  <--  p2        text\n*----------------------------------------------------------------------*\nFORM check-pernr .\n  DATA: l_pernr LIKE <wa_tab>-pernr,\n        l_data  LIKE sy-datum.\n\n  IF <wa_tab>-begda IS INITIAL.\n    l_data = sy-datum.\n  ELSE.\n    l_data = <wa_tab>-begda.\n  ENDIF.\n\n  SELECT SINGLE pernr\n    FROM pa0001\n    INTO l_pernr\n    WHERE pernr = <wa_tab>-pernr\n     AND endda >= l_data\n     AND begda <= l_data.\n\n  IF NOT sy-subrc IS INITIAL.\n    PERFORM add-msg-to-log USING 'E' '000' <wa_tab>-pernr.\n    fl_errore = 'X'.\n  ENDIF.\nENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  EXIT\n*&---------------------------------------------------------------------*\nFORM exit .\n  DATA: l_okcode LIKE sy-ucomm.\n\n  l_okcode = va_okcode.\n  CLEAR va_okcode.\n\n  CASE l_okcode.\n    WHEN ca_exit OR ca_back OR ca_canc.\n      CALL METHOD grid1->free.\n      CALL METHOD g_custom_container->free.\n\n      CALL METHOD cl_gui_cfw=>flush.\n\n      CLEAR g_custom_container.\n      CLEAR grid1.\n      CLEAR gr_event_handler.\n\n      SET SCREEN 0.\n      LEAVE SCREEN.\n  ENDCASE.\nENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  FCODE\n*&---------------------------------------------------------------------*\nFORM fcode .\n  DATA: l_okcode LIKE sy-ucomm.\n\n  l_okcode = va_okcode.\n  CLEAR va_okcode.\n\n  CASE l_okcode.\n    WHEN ca_change.\n      PERFORM ctr-update."
+        }
+      ],
+      "selection_diagnostics": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "covered": [
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "zse_read_cid",
+          "relation_signature": "(('PA0001', ('PERNR', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR'), True), ('PA0001', ('PERNR', 'SNAME'), ('PERNR',), True))",
+          "sql_shape": "(('PA0001',), ('PERNR', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR'), True)"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "zpro_cont",
+          "relation_signature": "(('PA0001', ('PERNR',), ('BEGDA', 'ENDDA', 'PERNR'), True),)",
+          "sql_shape": "(('PA0001',), ('PERNR',), ('BEGDA', 'ENDDA', 'PERNR'), True)"
+        }
+      ]
+    },
+    {
+      "id": "T11",
+      "query": "SELECT PA0001 WHERE PERNR",
+      "intent": "code_pattern",
+      "requested_terms": [
+        "PA0001",
+        "PERNR"
+      ],
+      "covered_terms": [
+        "PA0001",
+        "PERNR"
+      ],
+      "missing_terms": [],
+      "coverage": 1.0,
+      "relations": [
+        "SELECT_PA0001_WHERE_PERNR"
+      ],
+      "source_family_count": 2,
+      "v3_candidates": 15,
+      "semantic_candidates": 30,
+      "exact_candidates": 16076,
+      "merged_candidates": 10910,
+      "duplicates_removed": 5169,
+      "semantic_seconds": 0.0761,
+      "context_k": 2,
+      "selected": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "source_file": "zse_read_cid.html",
+          "chunk_index": 0,
+          "source_family": "zse_read_cid",
+          "v3_score": 1057.265,
+          "relationship_score": 220,
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "ZSE_READ_CID\n\n\n\n\n\n\nProgram listing for: ZSE_READ_CID\n\n\n\n\n\n\n\nFUNCTION ZSE_READ_CID.\n\n*\"----------------------------------------------------------------------\n\n*\"*\"Interfaccia locale:\n\n*\"  IMPORTING\n\n*\"     VALUE(INBOUND) TYPE  CHAR30 OPTIONAL\n\n*\"  EXPORTING\n\n*\"     VALUE(OUTBOUND) TYPE  CHAR30\n\n*\"  TABLES\n\n*\"      TAB_FILTER STRUCTURE  ZSE_FILTER_STRUCT\n\n*\"      TAB_CID STRUCTURE  ZSE_EMPLOYEE_STRUCT\n\n*\"----------------------------------------------------------------------\n\n\n\n*----------------------------------------------------------------------*\n\n* Dichiarazione dei dati locali alla funzione                          *\n\n*----------------------------------------------------------------------*\n\n\n\n\n\n\n\n  DATA: dim TYPE i.\n\n  DATA: l_sname LIKE pa0001-sname.\n\n  DATA: wa_filter TYPE zse_filter_struct.\n\n\n\n\n\n*==> Inizializzazione\n\nREFRESH tab_cid_output.\n\n\n\n*----------------------------------------------------------------------*\n\n* Blocco di controllo                                                  *\n\n*----------------------------------------------------------------------*\n\n\n\n  DESCRIBE TABLE tab_cid LINES dim.\n\n\n\n  IF dim > 0.\n\n\n\n    LOOP AT tab_filter INTO wa_filter.\n\n\n\n      SELECT SINGLE pernr sname FROM pa0001 INTO\n\n       (wa_cid_output-pernr , l_sname)\n\n      WHERE pernr = wa_filter-value\n\n        AND begda <= sy-datum\n\n        AND endda >= sy-datum.\n\n\n\n      IF sy-subrc = 0.\n\n\n\n       SPLIT l_sname AT space\n\n                     INTO wa_cid_output-nachn\n\n                          wa_cid_output-vorna.\n\n       APPEND wa_cid_output TO tab_cid_output.\n\n\n\n      ENDIF.\n\n\n\n\n\n    ENDLOOP.\n\n\n\n\n\n  ELSE.\n\n\n\nLOOP AT tab_filter INTO wa_filter.\n\n\n\n       SELECT SINGLE pernr sname FROM pa0001 INTO\n\n       (wa_cid_output-pernr , l_sname)\n\n      WHERE pernr = wa_filter-value"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "source_file": "zpro_cont.txt",
+          "chunk_index": 21,
+          "source_family": "zpro_cont",
+          "v3_score": 947.08,
+          "relationship_score": 220,
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR"
+          ],
+          "content": "ENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  CHECK-PERNR\n*&---------------------------------------------------------------------*\n*       text\n*----------------------------------------------------------------------*\n*  -->  p1        text\n*  <--  p2        text\n*----------------------------------------------------------------------*\nFORM check-pernr .\n  DATA: l_pernr LIKE <wa_tab>-pernr,\n        l_data  LIKE sy-datum.\n\n  IF <wa_tab>-begda IS INITIAL.\n    l_data = sy-datum.\n  ELSE.\n    l_data = <wa_tab>-begda.\n  ENDIF.\n\n  SELECT SINGLE pernr\n    FROM pa0001\n    INTO l_pernr\n    WHERE pernr = <wa_tab>-pernr\n     AND endda >= l_data\n     AND begda <= l_data.\n\n  IF NOT sy-subrc IS INITIAL.\n    PERFORM add-msg-to-log USING 'E' '000' <wa_tab>-pernr.\n    fl_errore = 'X'.\n  ENDIF.\nENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  EXIT\n*&---------------------------------------------------------------------*\nFORM exit .\n  DATA: l_okcode LIKE sy-ucomm.\n\n  l_okcode = va_okcode.\n  CLEAR va_okcode.\n\n  CASE l_okcode.\n    WHEN ca_exit OR ca_back OR ca_canc.\n      CALL METHOD grid1->free.\n      CALL METHOD g_custom_container->free.\n\n      CALL METHOD cl_gui_cfw=>flush.\n\n      CLEAR g_custom_container.\n      CLEAR grid1.\n      CLEAR gr_event_handler.\n\n      SET SCREEN 0.\n      LEAVE SCREEN.\n  ENDCASE.\nENDFORM.\n\n*&---------------------------------------------------------------------*\n*&      Form  FCODE\n*&---------------------------------------------------------------------*\nFORM fcode .\n  DATA: l_okcode LIKE sy-ucomm.\n\n  l_okcode = va_okcode.\n  CLEAR va_okcode.\n\n  CASE l_okcode.\n    WHEN ca_change.\n      PERFORM ctr-update."
+        }
+      ],
+      "selection_diagnostics": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "covered": [
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "zse_read_cid",
+          "relation_signature": "(('PA0001', ('PERNR', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR'), True), ('PA0001', ('PERNR', 'SNAME'), ('PERNR',), True))",
+          "sql_shape": "(('PA0001',), ('PERNR', 'SNAME'), ('BEGDA', 'ENDDA', 'PERNR'), True)"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "PA0001",
+            "PERNR"
+          ],
+          "covered_sql": [
+            "PERNR"
+          ],
+          "relationship_type": "SELECT_PA0001_WHERE_PERNR",
+          "relationship_hit": true,
+          "source_family": "zpro_cont",
+          "relation_signature": "(('PA0001', ('PERNR',), ('BEGDA', 'ENDDA', 'PERNR'), True),)",
+          "sql_shape": "(('PA0001',), ('PERNR',), ('BEGDA', 'ENDDA', 'PERNR'), True)"
+        }
+      ]
+    },
+    {
+      "id": "T12",
+      "query": "dati organizzativi dipendente SAP HCM",
+      "intent": "functional_lookup",
+      "requested_terms": [
+        "PA0001",
+        "PERNR",
+        "BUKRS",
+        "WERKS",
+        "BTRTL",
+        "PERSG",
+        "PERSK",
+        "KOSTL",
+        "ORGEH",
+        "PLANS",
+        "STELL"
+      ],
+      "covered_terms": [
+        "BTRTL",
+        "BUKRS",
+        "KOSTL",
+        "ORGEH",
+        "PA0001",
+        "PERNR",
+        "PERSG",
+        "PERSK",
+        "PLANS",
+        "STELL",
+        "WERKS"
+      ],
+      "missing_terms": [],
+      "coverage": 1.0,
+      "relations": [
+        "PA0001_ORG_FIELDS_PERNR"
+      ],
+      "source_family_count": 5,
+      "v3_candidates": 15,
+      "semantic_candidates": 30,
+      "exact_candidates": 22063,
+      "merged_candidates": 14778,
+      "duplicates_removed": 7303,
+      "semantic_seconds": 0.0847,
+      "context_k": 5,
+      "selected": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "source_file": "zse_read_occupational_data.html",
+          "chunk_index": 0,
+          "source_family": "zse_read_occupational_data",
+          "v3_score": 1413.4850000000001,
+          "relationship_score": 384,
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR",
+            "BUKRS",
+            "WERKS",
+            "BTRTL",
+            "PERSK",
+            "ORGEH",
+            "PLANS",
+            "STELL",
+            "BEGDA",
+            "ENDDA"
+          ],
+          "content": "ZSE_READ_OCCUPATIONAL_DATA\n\n\n\n\n\n\nProgram listing for: ZSE_READ_OCCUPATIONAL_DATA\n\n\n\n\n\n\n\nFUNCTION zse_read_occupational_data.\n\n*\"----------------------------------------------------------------------\n\n*\"*\"Interfaccia locale:\n\n*\"  IMPORTING\n\n*\"     VALUE(CID) TYPE  PERSNO\n\n*\"  TABLES\n\n*\"      TAB_OCCUPATIONAL STRUCTURE  ZSE_S_OCCUPATIONAL_DATA\n\n*\"----------------------------------------------------------------------\n\n*\n\n\n\n**************************\n\n* Dich. var. e tab. int. *\n\n**************************\n\n\n\n  DATA: app_persk TYPE pa0001-persk.\n\n  DATA: wa_occupational TYPE zse_s_occupational_data,\n\n          v_gbdat0 TYPE d,\n\n          v_gbdat1 TYPE i,\n\n          id_famiglia_prof TYPE sobid,\n\n          des_famiglia_prof(40),\n\n          id_area_prof TYPE sobid,\n\n          des_area_prof(40),\n\n          app_ztrfar TYPE pa0000-ztrfar.\n\n\n\n\n\n  TABLES: hrp1001, hrp1000, t001, t527x, t500p, pa0001, t001p.\n\n\n\n\n\n******************************************************************\n\n*        Lettura CID, Societ�, Area del Personale, Posizione,    *\n\n*        Mansione, Unit� organizzativa da PA0001.                *\n\n******************************************************************\n\n\n\nIF NOT CID IS INITIAL.\n\n\n\n\n\n  SELECT SINGLE pernr bukrs werks btrtl plans stell orgeh persk\n\n  INTO (wa_occupational-pernr,\n\n        wa_occupational-bukrs,\n\n        wa_occupational-werks,\n\n        wa_occupational-btrtl,\n\n        wa_occupational-plans,\n\n        wa_occupational-stell,\n\n        wa_occupational-orgeh,\n\n        app_persk)\n\n\n\n  FROM pa0001\n\n  WHERE pernr = cid\n\n  AND begda <= sy-datum\n\n  AND endda => sy-datum.\n\n\n\n*******************************************\n\n* Cod. e descr. sottoarea del personale   *\n\n*******************************************"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "source_file": "ztm_autorizzazione_massiva3.txt",
+          "chunk_index": 34,
+          "source_family": "ztm_autorizzazione_massiva3",
+          "v3_score": 1285.0149999999999,
+          "relationship_score": 362,
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR",
+            "WERKS",
+            "BTRTL",
+            "PERSG",
+            "PERSK",
+            "KOSTL",
+            "ORGEH",
+            "BEGDA",
+            "ENDDA"
+          ],
+          "content": "SELECT pernr subty endda begda seqnr\n       beguz enduz awart stdaz docnr faprs\n  INTO (tb_output-pernr, subty, endda_a, begda_a,\n        seqnr, tb_output-beguz, tb_output-enduz,\n        tb_output-awart, tb_output-stdaz, tb_output-docnr, va_faprs)\n  FROM  pa2002\n  WHERE  pernr  IN so_pernr\n  AND    subty  IN ra_awart\n  AND    sprps  = space\n  AND    endda  GE begda\n  AND    begda  LE endda\n  AND    faprs  IN so_faprs\n  ORDER BY awart.\n\n    CHECK: tb_output-pernr IN ra_pernr,\n           begda_a IN so_perio AND endda_a IN so_perio.\n\n    REFRESH ptext.\n    CONCATENATE: tb_output-pernr '2002' subty INTO key1,\n                 endda_a begda_a seqnr INTO key2,\n                 key1 key2 INTO final_key SEPARATED BY blank1.\n    MOVE final_key TO tx-key.\n    rp-imp-c1-tx.\n    LOOP AT ptext.\n      IF sy-tabix EQ 1.\n        tb_output-tipon = ptext.\n      ELSE.\n        tb_output-note = ptext.\n      ENDIF.\n    ENDLOOP.\n\n    CHECK tb_output-tipon IN so_tipon.\n\n    MOVE: tb_output-pernr TO tb_testo-pernr,\n          subty TO tb_testo-subty,\n          endda_a TO tb_testo-endda,\n          begda_a TO tb_testo-begda,\n          seqnr TO tb_testo-seqnr,\n          seqnr TO tb_output-seqnr.\n*    APPEND tb_testo.\n\n    SELECT pernr kostl kostl sname\n      INTO (tb_output-pernr, tb_output-kostl,\n            tb_output-kostl_o, tb_output-sname)\n      FROM  pa0001\n      WHERE  pernr  = tb_output-pernr\n      AND    sprps  = space\n      AND    endda  GE begda_a\n      AND    begda  LE endda_a\n      AND    werks  IN so_werks\n      AND    persg  IN so_persg\n      AND    persk  IN so_persk\n      AND    btrtl  IN so_btrtl\n      AND    kostl  IN so_kostl\n      AND    orgeh  IN so_orgeh\n      ORDER BY pernr."
+        },
+        {
+          "rank": 3,
+          "role": "COMPLEMENTARY",
+          "source_file": "ztm_simulazione_di_spesa.txt",
+          "chunk_index": 17,
+          "source_family": "ztm_simulazione_di_spesa",
+          "v3_score": 1289.0149999999999,
+          "relationship_score": 362,
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR",
+            "WERKS",
+            "BTRTL",
+            "PERSG",
+            "PERSK",
+            "KOSTL",
+            "ORGEH",
+            "BEGDA",
+            "ENDDA"
+          ],
+          "content": "ra_pernr-low = tb_pernr_aut-pernr.\n      APPEND ra_pernr.\n    ENDLOOP.\n\n    LOOP AT tb_t77pr.\n      AT FIRST.\n        ra_objid = 'IEQ'.\n      ENDAT.\n\n      ra_objid-low = tb_t77pr-objid.\n      APPEND ra_objid.\n    ENDLOOP.\n\n    LOOP AT so_pernr.\n      IF NOT so_pernr-low IN ra_pernr.\n        SELECT SINGLE * FROM  pa0001\n          WHERE  pernr  = so_pernr-low\n          AND    sprps  = space\n*        AND    endda  = '99991231'\n          AND    endda  GE begda\n          AND    begda  LE endda\n          AND    orgeh  IN ra_objid.\n        IF sy-subrc EQ 0.\n          ra_pernr = 'IEQ'.\n          ra_pernr-low = so_pernr-low.\n          APPEND ra_pernr.\n        ENDIF.\n      ENDIF.\n    ENDLOOP.\n  ENDIF.                               \"INS SC_04/05/2015\n\n  so_persg = 'EEQ'.\n  so_persg-low = '2'.\n  APPEND so_persg.\n\n  SELECT pernr kostl sname\n    INTO CORRESPONDING FIELDS OF TABLE tb_pernr\n    FROM  pa0001\n    WHERE  pernr  IN so_pernr\n    AND    pernr  IN ra_pernr\n    AND    sprps  EQ space\n    AND    endda  GE begda\n    AND    begda  LE endda\n    AND    werks  IN so_werks\n    AND    persg  IN so_persg\n    AND    persk  IN so_persk\n    AND    btrtl  IN so_btrtl\n    AND    orgeh  IN so_orgeh\n    ORDER BY pernr.\n\n  DELETE ADJACENT DUPLICATES FROM tb_pernr COMPARING pernr.\n\n  IF fl_n IS INITIAL.                                 \"INS SC_04/05/2015\n* Inizio modifiche                       \"INS SC_01/07/2014\n    DATA: persk TYPE persk,\n          cod_ogg_ext LIKE pa0001-cod_ogg_ext,\n          orgeh LIKE pa0001-orgeh,\n          sobid LIKE hrp1001-sobid,\n          codice_uo TYPE char20,\n          profl LIKE tb_persk-profl,\n          fl_nok."
+        },
+        {
+          "rank": 4,
+          "role": "COMPLEMENTARY",
+          "source_file": "ztm_ripartizione_fondi_sc.txt",
+          "chunk_index": 32,
+          "source_family": "ztm_ripartizione_fondi_sc",
+          "v3_score": 1283.415,
+          "relationship_score": 362,
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR",
+            "WERKS",
+            "BTRTL",
+            "PERSG",
+            "PERSK",
+            "KOSTL",
+            "ORGEH",
+            "BEGDA",
+            "ENDDA"
+          ],
+          "content": "REFRESH: tb_output_appo, tb_output.\n\n  SELECT pernr begda endda kostl kostl sname\n    INTO (tb_output-pernr, tb_output-begda,\n          tb_output-endda, tb_output-kostl,\n          tb_output-kostl_o, tb_output-sname)\n    FROM  pa0001\n    WHERE  pernr  IN so_pernr\n    AND    sprps  = space\n    AND    endda  GE begda\n    AND    begda  LE endda\n    AND    werks  IN so_werks\n    AND    persg  IN so_persg\n    AND    persk  IN so_persk\n    AND    btrtl  IN so_btrtl\n    AND    kostl  IN so_kostl\n    AND    orgeh  IN so_orgeh.\n\n    CHECK tb_output-pernr IN ra_pernr.\n\n    MOVE-CORRESPONDING tb_output TO tb_output_appo.\n    APPEND tb_output_appo.\n\n  ENDSELECT.\n\n  LOOP AT tb_output_appo.\n    AT NEW pernr.\n      REFRESH tb_datum.\n    ENDAT.\n\n    MOVE-CORRESPONDING tb_output_appo TO tb_output.\n    IF tb_output-begda LT begda.\n      tb_output-begda = begda.\n    ENDIF.\n    IF tb_output-endda GT endda.\n      tb_output-endda = endda.\n    ENDIF.\n\n    REFRESH: zes, psp.\n\n    b2_key-pernr = tb_output-pernr.\n    b2_key-pabrj = tb_output-begda+0(4).\n    b2_key-pabrp = tb_output-begda+4(2).\n    b2_key-cltyp = '1'.\n    IMPORT psp zes FROM DATABASE pcl2(b2) ID b2_key.\n\n    SELECT SINGLE zzawart INTO zzawart\n      FROM  ztm_straord_fond\n      WHERE  zzktart  = pa_fondo\n      AND    zzbegda  LE tb_output-endda\n      AND    zzendda  GE tb_output-begda."
+        },
+        {
+          "rank": 5,
+          "role": "COMPLEMENTARY",
+          "source_file": "ztm_ripartizione_fondi.txt",
+          "chunk_index": 38,
+          "source_family": "ztm_ripartizione_fondi",
+          "v3_score": 1358.315,
+          "relationship_score": 362,
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "exact_terms": [
+            "PA0001",
+            "PERNR",
+            "WERKS",
+            "BTRTL",
+            "PERSG",
+            "PERSK",
+            "KOSTL",
+            "ORGEH",
+            "BEGDA",
+            "ENDDA"
+          ],
+          "content": "refresh: tb_output_appo, tb_output.\n\n*** AG - Inizio\n  clear: tb_output_appo, tb_output , tb_quonr , tb_quonr[], seqnr.\n***AG - Fine\n\n  select pernr begda endda kostl kostl sname\n    into (tb_output-pernr, tb_output-begda,\n          tb_output-endda, tb_output-kostl,\n          tb_output-kostl_o, tb_output-sname)\n    from  pa0001\n    where  pernr  in so_pernr\n    and    sprps  = space\n    and    endda  ge begda\n    and    begda  le endda\n    and    werks  in so_werks\n    and    persg  in so_persg\n    and    persk  in so_persk\n    and    btrtl  in so_btrtl\n    and    kostl  in so_kostl\n    and    orgeh  in so_orgeh.\n\n    check tb_output-pernr in ra_pernr.\n\n* Inizio modifiche                       \"INS SC_01/07/2014\n    data: persk       type persk,\n          cod_ogg_ext like pa0001-cod_ogg_ext,\n          orgeh       like pa0001-orgeh,\n          sobid       like hrp1001-sobid,\n          codice_uo   type char20,\n          profl       like tb_persk-profl,\n          fl_nok.\n\n    if is_authorized is initial.\n      select single persk orgeh\n        into (persk, orgeh)\n        from  pa0001\n        where  pernr  = tb_output-pernr\n        and    endda  ge begda\n        and    begda  le endda.\n      if sy-subrc eq 0.\n        fl_nok = 'X'."
+        }
+      ],
+      "selection_diagnostics": [
+        {
+          "rank": 1,
+          "role": "PRIMARY",
+          "covered": [
+            "BTRTL",
+            "BUKRS",
+            "ORGEH",
+            "PA0001",
+            "PERNR",
+            "PERSK",
+            "PLANS",
+            "STELL",
+            "WERKS"
+          ],
+          "covered_sql": [
+            "BTRTL",
+            "BUKRS",
+            "ORGEH",
+            "PERNR",
+            "PERSK",
+            "PLANS",
+            "STELL",
+            "WERKS"
+          ],
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "source_family": "zse_read_occupational_data",
+          "relation_signature": "(('PA0001', ('BTRTL', 'BUKRS', 'ORGEH', 'PERNR', 'PERSK', 'PLANS', 'STELL', 'WERKS'), ('BEGDA', 'ENDDA', 'PERNR'), True),)",
+          "sql_shape": "(('PA0001',), ('BTRTL', 'BUKRS', 'ORGEH', 'PERNR', 'PERSK', 'PLANS', 'STELL', 'WERKS'), ('BEGDA', 'ENDDA', 'PERNR'), True)"
+        },
+        {
+          "rank": 2,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PA0001",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "covered_sql": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "source_family": "ztm_autorizzazione_massiva3",
+          "relation_signature": "(('PA0001', ('KOSTL', 'PERNR', 'SNAME'), ('BTRTL', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'WERKS'), False), ('PA2002', ('AWART', 'BEGDA', 'BEGUZ', 'DOCNR', 'ENDDA', 'ENDUZ', 'FAPRS', 'PERNR', 'SEQNR', 'STDAZ', 'SUBTY'), ('FAPRS', 'PERNR', 'SPRPS', 'SUBTY'), False))",
+          "sql_shape": "(('PA0001', 'PA2002'), ('AWART', 'BEGDA', 'BEGUZ', 'DOCNR', 'ENDDA', 'ENDUZ', 'FAPRS', 'KOSTL', 'PERNR', 'SEQNR', 'SNAME', 'STDAZ', 'SUBTY'), ('BTRTL', 'FAPRS', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'SUBTY', 'WERKS'), False)"
+        },
+        {
+          "rank": 3,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PA0001",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "covered_sql": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "source_family": "ztm_simulazione_di_spesa",
+          "relation_signature": "(('PA0001', ('KOSTL', 'PERNR', 'SNAME'), ('BTRTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'WERKS'), False),)",
+          "sql_shape": "(('PA0001',), ('KOSTL', 'PERNR', 'SNAME'), ('BTRTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'WERKS'), False)"
+        },
+        {
+          "rank": 4,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PA0001",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "covered_sql": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "source_family": "ztm_ripartizione_fondi_sc",
+          "relation_signature": "(('PA0001', ('BEGDA', 'ENDDA', 'KOSTL', 'PERNR', 'SNAME'), ('BTRTL', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'WERKS'), False), ('ZTM_STRAORD_FOND', ('ZZAWART',), ('ZZKTART',), True))",
+          "sql_shape": "(('PA0001', 'ZTM_STRAORD_FOND'), ('BEGDA', 'ENDDA', 'KOSTL', 'PERNR', 'SNAME', 'ZZAWART'), ('BTRTL', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'WERKS', 'ZZKTART'), True)"
+        },
+        {
+          "rank": 5,
+          "role": "COMPLEMENTARY",
+          "covered": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PA0001",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "covered_sql": [
+            "BTRTL",
+            "KOSTL",
+            "ORGEH",
+            "PERNR",
+            "PERSG",
+            "PERSK",
+            "WERKS"
+          ],
+          "relationship_type": "PA0001_ORG_FIELDS_PERNR",
+          "relationship_hit": true,
+          "source_family": "ztm_ripartizione_fondi",
+          "relation_signature": "(('PA0001', ('BEGDA', 'ENDDA', 'KOSTL', 'PERNR', 'SNAME'), ('BTRTL', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'WERKS'), False), ('PA0001', ('ORGEH', 'PERSK'), ('PERNR',), True))",
+          "sql_shape": "(('PA0001',), ('BEGDA', 'ENDDA', 'KOSTL', 'ORGEH', 'PERNR', 'PERSK', 'SNAME'), ('BTRTL', 'KOSTL', 'ORGEH', 'PERNR', 'PERSG', 'PERSK', 'SPRPS', 'WERKS'), True)"
+        }
+      ]
+    }
+  ]
+}

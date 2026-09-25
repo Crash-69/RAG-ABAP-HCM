@@ -1,0 +1,53 @@
+{
+  "version": "Qwen Diagnostic Harness V2",
+  "generated": "2026-09-24T13:03:11",
+  "source_context": "C:\\Progetto_AI\\context_v3_1_results.json",
+  "vector_db_read_only": true,
+  "retrieval_executed": false,
+  "ollama_url": "http://127.0.0.1:11434",
+  "model": "oisee/qwen-coder-abap:v7",
+  "temperature": 0.0,
+  "tests": [
+    {
+      "test_id": "T12E",
+      "context_chunks": 5,
+      "evidence_blocks": 5,
+      "response": "Ecco l'elenco di tutti i campi di PA0001 esplicitamente presenti nel contesto fornito, con il significato documentato o indicato come \"non documentato nel contesto\":\n\n1. CAMPO: pernr\n   SIGNIFICATO: Numero personale (documentato)\n\n2. CAMPO: bukrs\n   SIGNIFICATO: Codice della società (documentato)\n\n3. CAMPO: werks\n   SIGNIFICATO: Codice dell'ufficio di lavoro (documentato)\n\n4. CAMPO: btrtl\n   SIGNIFICATO: Codice del responsabile (documentato)\n\n5. CAMPO: plans\n   SIGNIFICATO: Codice della posizione (documentato)\n\n6. CAMPO: stell\n   SIGNIFICATO: Codice della mansione (documentato)\n\n7. CAMPO: orgeh\n   SIGNIFICATO: Codice dell'unità organizzativa (documentato)\n\n8. CAMPO: persk\n   SIGNIFICATO: Codice del tipo di persona (documentato)\n\n9. CAMPO: kostl\n   SIGNIFICATO: Centro di costo (non documentato nel contesto)\n\n10. CAMPO: sname\n    SIGNIFICATO: Nome della persona (non documentato nel contesto)\n\nCAMPI TOTALI: 10",
+      "latency_seconds": 362.3759035000112,
+      "ollama_metadata": {
+        "prompt_eval_count": 3395,
+        "prompt_eval_duration": 253549445000,
+        "eval_count": 285,
+        "eval_duration": 94751988000,
+        "total_duration": 362327512400,
+        "load_duration": 13845106800
+      },
+      "expected_t12_fields": [
+        "PA0001",
+        "PERNR",
+        "BUKRS",
+        "WERKS",
+        "BTRTL",
+        "PERSG",
+        "PERSK",
+        "KOSTL",
+        "ORGEH",
+        "PLANS",
+        "STELL"
+      ],
+      "field_presence": {
+        "PA0001": true,
+        "PERNR": true,
+        "BUKRS": true,
+        "WERKS": true,
+        "BTRTL": true,
+        "PERSG": false,
+        "PERSK": true,
+        "KOSTL": true,
+        "ORGEH": true,
+        "PLANS": true,
+        "STELL": true
+      }
+    }
+  ]
+}

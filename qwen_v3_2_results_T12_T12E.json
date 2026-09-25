@@ -1,0 +1,109 @@
+{
+  "version": "Qwen Diagnostic Harness V2",
+  "generated": "2026-09-24T13:03:11",
+  "source_context": "C:\\Progetto_AI\\context_v3_1_results.json",
+  "vector_db_read_only": true,
+  "retrieval_executed": false,
+  "ollama_url": "http://127.0.0.1:11434",
+  "model": "oisee/qwen-coder-abap:v7",
+  "temperature": 0.0,
+  "tests": [
+    {
+      "test_id": "T12E",
+      "context_chunks": 5,
+      "evidence_blocks": 5,
+      "response": "Ecco l'elenco di tutti i campi di PA0001 esplicitamente presenti nel contesto fornito, con il significato documentato o indicato come \"non documentato nel contesto\":\n\n1. CAMPO: pernr\n   SIGNIFICATO: Numero personale (documentato)\n\n2. CAMPO: bukrs\n   SIGNIFICATO: Codice della società (documentato)\n\n3. CAMPO: werks\n   SIGNIFICATO: Codice dell'ufficio di lavoro (documentato)\n\n4. CAMPO: btrtl\n   SIGNIFICATO: Codice del responsabile (documentato)\n\n5. CAMPO: plans\n   SIGNIFICATO: Codice della posizione (documentato)\n\n6. CAMPO: stell\n   SIGNIFICATO: Codice della mansione (documentato)\n\n7. CAMPO: orgeh\n   SIGNIFICATO: Codice dell'unità organizzativa (documentato)\n\n8. CAMPO: persk\n   SIGNIFICATO: Codice del tipo di persona (documentato)\n\n9. CAMPO: kostl\n   SIGNIFICATO: Centro di costo (non documentato nel contesto)\n\n10. CAMPO: sname\n    SIGNIFICATO: Nome della persona (non documentato nel contesto)\n\nCAMPI TOTALI: 10",
+      "latency_seconds": 362.3759035000112,
+      "ollama_metadata": {
+        "prompt_eval_count": 3395,
+        "prompt_eval_duration": 253549445000,
+        "eval_count": 285,
+        "eval_duration": 94751988000,
+        "total_duration": 362327512400,
+        "load_duration": 13845106800
+      },
+      "expected_t12_fields": [
+        "PA0001",
+        "PERNR",
+        "BUKRS",
+        "WERKS",
+        "BTRTL",
+        "PERSG",
+        "PERSK",
+        "KOSTL",
+        "ORGEH",
+        "PLANS",
+        "STELL"
+      ],
+      "field_presence": {
+        "PA0001": true,
+        "PERNR": true,
+        "BUKRS": true,
+        "WERKS": true,
+        "BTRTL": true,
+        "PERSG": false,
+        "PERSK": true,
+        "KOSTL": true,
+        "ORGEH": true,
+        "PLANS": true,
+        "STELL": true
+      }
+    }
+  ]
+}
+
+
+
+{
+  "version": "Qwen Diagnostic Harness V2",
+  "generated": "2026-09-24T13:24:15",
+  "source_context": "C:\\Progetto_AI\\context_v3_1_results.json",
+  "vector_db_read_only": true,
+  "retrieval_executed": false,
+  "ollama_url": "http://127.0.0.1:11434",
+  "model": "oisee/qwen-coder-abap:v7",
+  "temperature": 0.0,
+  "tests": [
+    {
+      "test_id": "T12",
+      "context_chunks": 5,
+      "evidence_blocks": 5,
+      "response": "### Dati Organizzativi del Dipendente Esplicitamente Presenti in PA0001\n\n1. **pernr** - Numero personale (obbligatorio)\n2. **bukrs** - Codice aziendale\n3. **werks** - Codice unità organizzativa\n4. **btrtl** - Codice del responsabile\n5. **plans** - Codice della posizione\n6. **stell** - Codice della mansione\n7. **orgeh** - Codice dell'unità organizzativa superiore\n8. **persk** - Codice del tipo di dipendente\n\n### Esempio ABAP Basato Sui Campi Verificati\n\n```abap\nDATA: wa_pa0001 TYPE pa0001.\n\nSELECT SINGLE pernr bukrs werks btrtl plans stell orgeh persk\n  INTO CORRESPONDING FIELDS OF wa_pa0001\n  FROM pa0001\n  WHERE pernr = '00000000000000000001'\n    AND begda <= sy-datum\n    AND endda >= sy-datum.\n\nIF sy-subrc = 0.\n  WRITE: / 'Numero Personale:', wa_pa0001-pernr,\n         / 'Codice Aziendale:', wa_pa0001-bukrs,\n         / 'Unità Organizzativa:', wa_pa0001-werks,\n         / 'Responsabile:', wa_pa0001-btrtl,\n         / 'Posizione:', wa_pa0001-plans,\n         / 'Mansione:', wa_pa0001-stell,\n         / 'Unità Organizzativa Superiore:', wa_pa0001-orgeh,\n         / 'Tipo di Dipendente:', wa_pa0001-persk.\nELSE.\n  WRITE: / 'Dipendente non trovato'.\nENDIF.\n```\n\n### Spiegazione dei Campi\n\n- **pernr**: Numero personale del dipendente (obbligatorio).\n- **bukrs**: Codice aziendale dove lavora il dipendente.\n- **werks**: Codice dell'unità organizzativa dove lavora il dipendente.\n- **btrtl**: Codice del responsabile del dipendente.\n- **plans**: Codice della posizione occupata dal dipendente.\n- **stell**: Codice della mansione del dipendente.\n- **orgeh**: Codice dell'unità organizzativa superiore del dipendente.\n- **persk**: Codice del tipo di dipendente (es. regolare, stagionale).\n\nQuesti campi sono chiaramente definiti e utilizzati nel contesto fornito.",
+      "latency_seconds": 465.7723251999705,
+      "ollama_metadata": {
+        "prompt_eval_count": 3424,
+        "prompt_eval_duration": 244539893000,
+        "eval_count": 608,
+        "eval_duration": 214873440000,
+        "total_duration": 465679788900,
+        "load_duration": 6192420700
+      },
+      "expected_t12_fields": [
+        "PA0001",
+        "PERNR",
+        "BUKRS",
+        "WERKS",
+        "BTRTL",
+        "PERSG",
+        "PERSK",
+        "KOSTL",
+        "ORGEH",
+        "PLANS",
+        "STELL"
+      ],
+      "field_presence": {
+        "PA0001": true,
+        "PERNR": true,
+        "BUKRS": true,
+        "WERKS": true,
+        "BTRTL": true,
+        "PERSG": false,
+        "PERSK": true,
+        "KOSTL": false,
+        "ORGEH": true,
+        "PLANS": true,
+        "STELL": true
+      }
+    }
+  ]
+}
